@@ -5,9 +5,9 @@ export default async function resizeImage(
   newImage: string,
   width: number = 200,
   height: number = 200
-): Promise<string|boolean> {
+): Promise<string | boolean> {
   try {
-      await sharp(oldImage)
+    await sharp(oldImage)
       .resize({
         width: +width,
         height: +height,

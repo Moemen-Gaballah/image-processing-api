@@ -1,6 +1,6 @@
 # image processing api
-image processing api nodejs convert image size.
 
+image processing api nodejs convert image size.
 
 ## Installation
 
@@ -8,16 +8,13 @@ Clone the repo `git clone https://github.com/Moemen-Gaballah/image-processing-ap
 
 `npm install`
 
-"start": "nodemon src/server.ts",
-"prod": "node dist/server.js",
-"build": "npx tsc",
-"prettier": "npx prettier --write .",
-"jasmine": "jasmine",
-"test": "npm run build && npm run jasmine"
+run env development `npm run dev`
 
-run env development `npm run start`
+run env production `npm run start`
 
-run env production `npm run prod`
+run lint `npm run lint`
+
+run build `npm run build`
 
 run jasmine `npm run jasmine`
 
@@ -32,6 +29,7 @@ run test `npm run test`
 - [x] add test
 
 ### TODO
+
 - [] add more test (unit test).
 - [] test more and more manual and unit
 - [] upload image to convert it

@@ -7,21 +7,42 @@ import fs from "fs";
 
 const PORT = 3000;
 const app = express();
+const statusValidationError = 422;
 
-app.get("/ok", (req, res) => {
+app.get("/ok", (req: express.Request, res: express.Response) => {
   res.send("ok").status(200);
 });
 
-app.get("/images", async (req, res) => {
-  var filename: string = "404.png";
-  var height: number = 200;
-  var width: number = 200;
+app.get("/images", async (req: express.Request, res: express.Response) => {
+  var filename: string = "";
+  var height: number = 0;
+  var width: number = 0;
 
-  if (req.query.filename) filename = req.query.filename as string;
+  if (req.query.filename) {
+    filename = req.query.filename as string;
+  } else {
+    res.send("Invalid file name").status(statusValidationError);
+  }
 
-  if (req.query.height) height = req.query.height as unknown as number;
+  if (
+    req.query.height &&
+    Number.isInteger(Number(req.query.height)) &&
+    Number(req.query.height) > 0
+  ) {
+    height = req.query.height as unknown as number;
+  } else {
+    res.send("Invalid height").status(statusValidationError);
+  }
 
-  if (req.query.width) width = req.query.width as unknown as number;
+  if (
+    req.query.width &&
+    Number.isInteger(Number(req.query.width)) &&
+    Number(req.query.width) > 0
+  ) {
+    width = req.query.width as unknown as number;
+  } else {
+    res.send("Invalid width").status(statusValidationError);
+  }
 
   var oldImagePath = "./assets/images/full/" + filename;
   var newImagePath = "./assets/images/thumb/thumb_" + filename;
@@ -29,19 +50,19 @@ app.get("/images", async (req, res) => {
   try {
     fs.exists(oldImagePath, async function (doesExist) {
       if (!doesExist) {
-        let newImagePathTemp = path.join(
-          __dirname,
-          `../assets/images/thumb/404.jpg`
-        );
-
-        res.sendFile(newImagePathTemp);
+        res.send("image not found");
       } else {
         try {
-          var status = await resizeImage(oldImagePath, newImagePath, width, height)
+          var status = await resizeImage(
+            oldImagePath,
+            newImagePath,
+            width,
+            height
+          );
           if (status) {
             let newImagePathTemp = path.join(__dirname, `../${newImagePath}`);
 
-            res.sendFile(newImagePathTemp);
+            res.status(200).sendFile(newImagePathTemp);
           }
         } catch (error) {
           console.log(error);
@@ -56,3 +77,5 @@ app.get("/images", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`server running on port: ${PORT}`);
 });
+
+export default app;
